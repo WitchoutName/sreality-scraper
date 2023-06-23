@@ -1,7 +1,7 @@
 import puppeteer, { Page } from "puppeteer";
-import config from "./config.js";
+import { env } from 'process';
 
-const getPageListings = async (page:Page): Promise<Array<Object>> => {
+const getPageListings = async (page:Page): Promise<Array<object>> => {
   const listings = [];
 
   // wait for the listings to load
@@ -10,24 +10,28 @@ const getPageListings = async (page:Page): Promise<Array<Object>> => {
 
   // parse all listings
   for (const handle of listingsHandles) {
-    let listing = {
+    const listing = {
       title: "Null",
       img: "null"
     }
 
     try {
       listing.title = await page.evaluate(
-        (el) => el.querySelector(".title").textContent.trim(),
+        (el) => el.querySelector(".title").textContent.trim(), 
         handle
       );
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
 
     try {
       listing.img = await page.evaluate(
         (el) => el.querySelector("img").getAttribute("src"),
         handle
       );
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
 
     listings.push(listing);
   }
@@ -38,11 +42,13 @@ const getPageListings = async (page:Page): Promise<Array<Object>> => {
 export default async function getListings() {
   let listings = [];
   let timeout = false;
-  const target_number = Number(config.SC_TARGET_NUMBER);
+  const target_number = Number(env.SC_TARGET_NUMBER);
 
   const browser = await puppeteer.launch({
-    headless: false,
-      defaultViewport: null,
+    executablePath: '/usr/bin/google-chrome',
+    args: ['--no-sandbox']
+    // headless: false,
+    // defaultViewport: null,
   });
       
     
@@ -54,6 +60,7 @@ export default async function getListings() {
         waitUntil: "domcontentloaded",
       });
       const newListings = await getPageListings(page);
+      // console.log(newListings);
       listings = listings.concat(newListings);
     } catch(e){
       timeout = true;
