@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Belanosima:wght@700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -17,8 +19,13 @@
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
+  color: rgb(var(--background-start-rgb));
+
+}
+
+
+.font-title {
+  color: linear-gradient(
       to bottom,
       transparent,
       rgb(var(--background-end-rgb))

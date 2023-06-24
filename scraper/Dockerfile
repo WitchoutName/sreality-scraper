@@ -39,7 +39,4 @@ RUN chmod -R 777 /app/status
 # Compile TS to JS
 RUN npm run build
 
-
-ENTRYPOINT ["./docker-entrypoint.sh"]
-
 CMD [ "npm", "start" ]

@@ -15,7 +15,6 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 RUN apt-get update -y && apt-get install -y openssl
-# RUN npm run migrate
 
 
 FROM base AS devrunner
