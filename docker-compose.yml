@@ -14,7 +14,7 @@ services:
   app:
     container_name: app
     build:
-      context: ./nexttry
+      context: ./nextjs
       dockerfile: Dockerfile
     environment:
       - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_DATABASE}
@@ -24,7 +24,7 @@ services:
     ports: 
       - 8080:8080
     # volumes:
-    #   - ./nexttry:/app
+    #   - ./nextjs:/app
 
 
   scraper:
