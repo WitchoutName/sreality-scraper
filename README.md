@@ -2,7 +2,7 @@
 This project scrapes the first 500 items (title, image url) from sreality.cz (flats, sell) and saves them in a Postgresql database. It also implements a simple web app using Next.js and React to show these 500 items on a nice page with pagination and custom design.
 
 ## Disclaimer
-This project is not intended to be production-ready or follow best practices. It is a simple demonstration of scraping and web development skills. For ease of deployment some of the shortcuts taken include:
+This project is not intended to be production-ready or follow best practices. It is a simple demonstration of scraping and web development skills. For speed of development and ease of deployment, some of the shortcuts taken include:
 
 - Committing the .env file in the repository
 - Running dev servers in docker containers
