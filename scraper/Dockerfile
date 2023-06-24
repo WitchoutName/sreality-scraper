@@ -16,10 +16,6 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build the project
-RUN npm run build
-
-
 # We don't need the standalone Chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
@@ -33,10 +29,8 @@ RUN apt-get update && apt-get install curl gnupg -y \
   && rm -rf /var/lib/apt/lists/*
 
 
-RUN chmod +x ./wait-for-it.sh ./docker-entrypoint.sh
-RUN chmod -R 777 /app/status
+RUN chmod +x  ./docker-entrypoint.sh
 
-# Compile TS to JS
-RUN npm run build
+ENTRYPOINT [ "./docker-entrypoint.sh" ]
 
 CMD [ "npm", "start" ]

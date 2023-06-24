@@ -9,6 +9,7 @@ COPY package*.json ./
 
 RUN npm install
 
+# Install all dependencies
 FROM base AS installer
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
@@ -17,6 +18,7 @@ COPY . .
 RUN apt-get update -y && apt-get install -y openssl
 
 
+# Run the DEV server
 FROM base AS devrunner
 WORKDIR /
 COPY --from=installer . .
@@ -24,10 +26,10 @@ WORKDIR /app
 
 
 RUN chmod +x ./docker-entrypoint.sh
-RUN chmod 777 /root
+# RUN chmod 777 /root
 
 
-COPY ../.env ./.env.local
+# COPY ../.env ./.env.local
 
 
 EXPOSE 8080

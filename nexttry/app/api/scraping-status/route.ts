@@ -4,6 +4,7 @@ import { env } from 'process';
 import { getStatus, setStatus } from '@/prisma/scrapingStatus';
  
 
+// get the current status of the scraper
 export async function GET() {
     const status = await getStatus()
     const count = await prisma.listing.count();
@@ -17,6 +18,7 @@ export async function GET() {
 }
 
 
+// set status message
 export async function POST(request: Request) {
     await setStatus(await request.text());
     return NextResponse.json("ok");

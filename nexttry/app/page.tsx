@@ -5,11 +5,13 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react';
 
 
+// fetch scraper state
 async function getState() {
   const res = await fetch("http://localhost:8080/api/scraping-status");
   return res.json();
 }
 
+// fetch alvaliable listings
 async function getListings() {
   const res = await fetch("http://localhost:8080/api/listings");
   return res.json();
@@ -24,6 +26,7 @@ export default function Home() {
   })
   const [listings, setlistings] = useState([]);
 
+  // run the effect only once on mount
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -37,9 +40,10 @@ export default function Home() {
 
     // Cleanup the interval when the component unmounts
     return () => clearInterval(interval);
-  }, []); // Empty dependency array to run the effect only once on mount
+  }, []);
 
 
+  // when the the scraper staus is done, fetch the data
   useEffect(() => {
     if(loaderData.done){
       const fetchData = async () => {

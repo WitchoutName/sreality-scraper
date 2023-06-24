@@ -23,8 +23,8 @@ services:
       - postgres
     ports: 
       - 8080:8080
-    volumes:
-      - ./nexttry:/app
+    # volumes:
+    #   - ./nexttry:/app
 
 
   scraper:
@@ -35,6 +35,6 @@ services:
       - ./.env
     depends_on:
       - app
-    volumes:
-      - ./scraper:/app
+    # volumes:
+    #   - ./scraper:/app
 
