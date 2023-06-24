@@ -1,5 +1,6 @@
 import puppeteer, { Page } from "puppeteer";
 import { env } from 'process';
+import { postListings } from "./database.js";
 
 const getPageListings = async (page:Page): Promise<Array<object>> => {
   const listings = [];
@@ -12,7 +13,7 @@ const getPageListings = async (page:Page): Promise<Array<object>> => {
   for (const handle of listingsHandles) {
     const listing = {
       title: "Null",
-      img: "null"
+      imgUrl: "null"
     }
 
     try {
@@ -25,7 +26,7 @@ const getPageListings = async (page:Page): Promise<Array<object>> => {
     }
 
     try {
-      listing.img = await page.evaluate(
+      listing.imgUrl = await page.evaluate(
         (el) => el.querySelector("img").getAttribute("src"),
         handle
       );
@@ -59,8 +60,11 @@ export default async function getListings() {
       await page.goto(`https://www.sreality.cz/en/search/for-sale/apartments?page=${i}`, {
         waitUntil: "domcontentloaded",
       });
+      
       const newListings = await getPageListings(page);
-      // console.log(newListings);
+      postListings(newListings);
+      
+
       listings = listings.concat(newListings);
     } catch(e){
       timeout = true;

@@ -1,4 +1,4 @@
-FROM node:16-slim AS base
+FROM node:16-slim as base
 
 FROM base AS deps
 # Set working directory
@@ -9,31 +9,33 @@ COPY package*.json ./
 
 RUN npm install
 
-
-FROM base AS buider
+FROM base AS installer
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build the project
-RUN npm run build
+RUN apt-get update -y && apt-get install -y openssl
+# RUN npm run migrate
 
 
-# runner image
-FROM base AS runner
+FROM base AS devrunner
+WORKDIR /
+COPY --from=installer . .
 WORKDIR /app
-COPY --from=buider /app .
+
 
 RUN chmod +x ./docker-entrypoint.sh
-RUN chmod -R 777 /app/status
-
-EXPOSE 3000
-
-ENV PORT 3000
+RUN chmod 777 /root
 
 
+COPY ../.env ./.env.local
+
+
+EXPOSE 8080
+
+ENV PORT 8080
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
 

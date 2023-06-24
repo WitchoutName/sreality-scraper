@@ -1,14 +1,14 @@
 import { writeFileSync } from "fs";
-import path from "path";
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
 
 export enum Status{
     Started,
-    DatabaseReady,
     ScrapingDone
 }
 
-// export const projectRootDir = path.resolve(dirname(fileURLToPath(import.meta.url)), '../../');
+export const scraperRootDir = path.resolve(dirname(fileURLToPath(import.meta.url)), '../../');
 
-export async function setScraperStatus(status:Status): Promise<void> {
-    await writeFileSync(path.resolve("../status/scrapingStatus.txt"),  status.toString());
+export function setScraperStatus(status:Status): void {
+    writeFileSync(scraperRootDir + "/status/scrapingStatus",  status.toString());
 }

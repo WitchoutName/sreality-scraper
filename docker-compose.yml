@@ -1,12 +1,31 @@
-version: '2'
+version: '3'
 services:
-  db:
+  postgres:
+    container_name: ${DB_HOST}
     image: postgres
-    restart: always
+    ports:
+      - ${DB_PORT}:5432
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_DATABASE}
+
+
+  app:
+    container_name: app
+    build:
+      context: ./nexttry
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_DATABASE}
+      - SC_TARGET_NUMBER=${SC_TARGET_NUMBER}
+    depends_on:
+      - postgres
+    ports: 
+      - 8080:8080
+    volumes:
+      - ./nexttry:/app
+
 
   scraper:
     build:
@@ -15,26 +34,7 @@ services:
     env_file:
       - ./.env
     depends_on:
-      - db
+      - app
     volumes:
       - ./scraper:/app
-      - ./status:/app/status
-      - db-module:/app/src/db
 
-  nextjs:
-    build:
-      context: ./nextjs
-      dockerfile: Dockerfile
-    env_file:
-      - ./.env
-    depends_on:
-      - db
-    ports:
-      - 8080:3000
-    volumes:
-      - ./nextjs:/app
-      - ./status:/app/status
-      - db-module:/app/db
-
-volumes:
-  db-module:

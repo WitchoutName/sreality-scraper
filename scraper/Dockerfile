@@ -1,5 +1,24 @@
-# Use a Node.js base image
-FROM node:slim
+FROM node:16-slim AS base
+
+FROM base AS deps
+# Set working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+RUN npm install
+
+
+# runner image
+FROM base AS runner
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Build the project
+RUN npm run build
+
 
 # We don't need the standalone Chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
@@ -14,21 +33,12 @@ RUN apt-get update && apt-get install curl gnupg -y \
   && rm -rf /var/lib/apt/lists/*
 
 
-# Set working directory
-WORKDIR /app
-
-# Copy package.json and package-lock.json
-COPY package*.json ./
-
-# Install dependencies
-RUN npm install
-
-# Copy the entire scraper directory to the container
-COPY . .
 RUN chmod +x ./wait-for-it.sh ./docker-entrypoint.sh
+RUN chmod -R 777 /app/status
 
 # Compile TS to JS
 RUN npm run build
+
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
 
