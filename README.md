@@ -22,12 +22,12 @@ This will start the scraper and the web app. You can access the web app at http:
 ## How it works
 The project works in the following manner:
 
-1. The scraper container runs a Node.js script that uses Puppeteer to scrape the listings from sreality.cz. It uses a singleton pattern to initialize the database connection and create the listings table if it does not exist.
+1. The scraper container runs a Node.js script that uses Puppeteer to scrape the listings from sreality.cz. It initializes the database connection and create the listings table if it does not exist.
 2. The scraper progressively saves the scraped listings in the database using the Next.js app API. It also updates a field on a singleton record in the database to indicate the progress of the scraping.
 3. Once the scraping is done, the scraper changes the field on the singleton record to indicate that the scraping is complete and exits.
-4. The web app container runs a Next.js app that uses React for the frontend and Prisma as an ORM to access the database. It also uses Tailwind CSS for styling and React Paginate for pagination.
-5. The web app displays the progress of the scraping on the index page using Server-Side Rendering (SSR) and polling. It fetches the singleton record from the database and shows a progress bar based on the number of scraped listings.
-6. Once all the data is in the database, the web app switches to display the gathered listings in a gallery with pagination and custom design.
+4. The web app container runs a Next.js app that uses React for the frontend and Prisma as an ORM to access the database. It also uses Tailwind CSS for styling.
+5. The web app displays the progress of the scraping on the index page using. It fetches the singleton record from the database and shows a progress bar based on the number of scraped listings.
+6. Once all the data is in the database, the web app switches to display the gathered listings in a gallery with custom pagination.
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
