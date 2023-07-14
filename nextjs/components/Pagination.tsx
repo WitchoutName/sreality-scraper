@@ -1,13 +1,6 @@
 import * as React from 'react';
 import { useEffect } from 'react';
 
-const buttonSyeles = {
-    base: " px-4 py-2 text-sm font-medium border ",
-    default: " text-gray-900 bg-white border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 ",
-    disabled: " text-gray-500 bg-gray-200 border-gray-200 hover:cursor-not-allowed "
-}
-
-
 
 export interface IPaginationProps {
     setItems: Function
@@ -16,6 +9,11 @@ export interface IPaginationProps {
     rest?: object
 }
 
+const buttonSyeles = {
+    base: " px-4 py-2 text-sm font-medium border ",
+    default: " text-gray-900 bg-white border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 ",
+    disabled: " text-gray-500 bg-gray-200 border-gray-200 hover:cursor-not-allowed "
+}
 
 const enum ClickType {
     Prev,
@@ -36,19 +34,21 @@ interface ClickBlueprint {
 
 }
 
-
+// function returning the correct number of listings to show in UI
 const cappedListingEnd = (end: number, items: Array<object>, perPage: number) => end <= items.length ? end : (end - perPage) + (items.length - (end - perPage))
 
 
 export default function Pagination ({setItems, perPage, items, rest}: IPaginationProps) {
     const [start, setStart] = React.useState(1);
     const [end, setEnd] = React.useState(perPage);
-    
+
+    // condiiton, whether the pagination is at the start, or at the very end 
     const edgeConditions = {
         [ClickType.Prev]: () => start <= 1,
-        [ClickType.Next]: () => end >= (items.length )
+        [ClickType.Next]: () => end >= items.length
     }
 
+    // the condition is not in this object directly, because it's also used by the button styles
     const clickBlueprints = {
         [ClickType.Prev]: { // substitution
             condition: edgeConditions[ClickType.Prev], 
@@ -60,6 +60,7 @@ export default function Pagination ({setItems, perPage, items, rest}: IPaginatio
         },
     }
 
+    // NOTE: althogh the most effitient code duplication-wise, mabye a bit too complex for given problem
     const handleClickFactory = (clickBlueprint: ClickBlueprint) => {
         const { condition, operation } = clickBlueprint;
         
